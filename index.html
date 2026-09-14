@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doahang Docs - 炫酷文档演示</title>
+    <title>Daohang Docs - 极速云端文档</title>
     <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -12,98 +12,186 @@
             theme: {
                 extend: {
                     colors: {
-                        brand: { 500: '#6366f1', 600: '#4f46e5' }
+                        darker: '#090d16',
+                        panel: '#111827',
                     }
                 }
             }
         }
     </script>
+    <!-- 引入 Marked.js 用于渲染 Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        @keyframes glow {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .animate-glow {
-            animation: glow 6s infinite ease-in-out;
-        }
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen relative overflow-x-hidden">
+<body class="bg-[#0b0f19] text-slate-100 font-sans antialiased h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white">
 
-    <!-- 背景炫光动画 -->
-    <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl pointer-events-none animate-glow"></div>
-    <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-glow" style="animation-delay: 3s;"></div>
-
-    <!-- 导航栏 -->
-    <header class="border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-50 bg-slate-950/60">
-        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 font-black text-lg">D</div>
-                <span class="font-bold tracking-wider text-lg bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">DOAHANG DOCS</span>
+    <!-- 左侧边栏：文档列表 -->
+    <aside class="w-72 bg-[#0e1322] border-r border-slate-800/80 flex flex-col z-10">
+        <!-- 顶部 Logo 与新建按钮 -->
+        <div class="p-4 border-b border-slate-800/80 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-sm shadow-md shadow-indigo-500/20">D</div>
+                <span class="font-bold tracking-wide text-sm bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Daohang Docs</span>
             </div>
-            <div class="flex items-center space-x-4">
-                <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">v1.0.0 Live</span>
-                <a href="https://github.com" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition">GitHub</a>
-            </div>
+            <button onclick="createNewDoc()" class="p-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-sm" title="新建文档">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+            </button>
         </div>
-    </header>
 
-    <!-- 主体内容区 -->
-    <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
-        <!-- 侧边栏导航 -->
-        <aside class="space-y-6 hidden md:block">
-            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Getting Started</div>
-            <ul class="space-y-2 text-sm text-slate-400">
-                <li><a href="#intro" class="block px-3 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 font-medium border border-indigo-500/20">🚀 快速导览</a></li>
-                <li><a href="#features" class="block px-3 py-2 rounded-lg hover:bg-slate-900 hover:text-slate-200 transition">✨ 核心特性</a></li>
-                <li><a href="#components" class="block px-3 py-2 rounded-lg hover:bg-slate-900 hover:text-slate-200 transition">📦 组件演示</a></li>
-            </ul>
-        </aside>
+        <!-- 文档标题列表 -->
+        <div id="doc-list" class="flex-1 overflow-y-auto p-3 space-y-1.5 text-sm">
+            <!-- 动态生成 -->
+        </div>
 
-        <!-- 文档正文 -->
-        <section class="md:col-span-3 space-y-10">
-            <!-- 头部 Banner -->
-            <div class="p-8 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-900/20 border border-slate-800/80 relative overflow-hidden">
-                <div class="relative z-10 space-y-4">
-                    <span class="inline-block text-xs uppercase tracking-widest text-purple-400 font-bold px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20">Next-Gen UI</span>
-                    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">为年轻一代打造的<br><span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">极速炫酷文档</span></h1>
-                    <p class="text-slate-400 max-w-2xl text-base">零服务器负担，依托 Cloudflare 全球节点。极致轻量、动画流畅、视觉拉满，专为 23 岁以下年轻开发者与先锋团队设计。</p>
-                </div>
+        <!-- 底部状态 -->
+        <div class="p-3 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
+            <span>✨ 零服务器纯端存储</span>
+            <span id="save-status" class="text-emerald-400">已自动保存</span>
+        </div>
+    </aside>
+
+    <!-- 右侧主编辑区 -->
+    <main class="flex-1 flex flex-col bg-[#0b0f19] relative">
+        <!-- 顶部工具栏 -->
+        <header class="h-14 border-b border-slate-800/80 px-6 flex items-center justify-between bg-[#0e1322]/50 backdrop-blur-md">
+            <input type="text" id="doc-title-input" oninput="updateTitle()" placeholder="输入文档标题..." class="bg-transparent font-bold text-lg text-white focus:outline-none w-1/2">
+            
+            <div class="flex items-center space-x-3">
+                <button onclick="switchTab('edit')" id="btn-edit" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition">编辑模式</button>
+                <button onclick="switchTab('preview')" id="btn-preview" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white transition">预览排版</button>
+                <button onclick="exportDoc()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">导出 Markdown</button>
             </div>
+        </header>
 
-            <!-- 特性卡片 -->
-            <div id="features" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-indigo-500/50 transition group">
-                    <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition">⚡️</div>
-                    <h3 class="text-lg font-bold text-white mb-2">极速响应</h3>
-                    <p class="text-sm text-slate-400">纯静态前端托管在 Cloudflare Pages，结合优选IP，全国各地毫秒级响应。</p>
-                </div>
-                <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-purple-500/50 transition group">
-                    <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 group-hover:scale-110 transition">💎</div>
-                    <h3 class="text-lg font-bold text-white mb-2">暗黑美学</h3>
-                    <p class="text-sm text-slate-400">自带流光溢彩的渐变背景与微组件，深夜阅读不刺眼，科技感直接拉满。</p>
-                </div>
-            </div>
-
-            <!-- 代码块演示 -->
-            <div id="components" class="space-y-4">
-                <h2 class="text-xl font-bold text-white">快速接入代码</h2>
-                <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden">
-                    <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                        <span>terminal</span>
-                        <span>bash</span>
-                    </div>
-                    <pre class="p-4 text-sm text-indigo-300 overflow-x-auto font-mono"><code># 克隆并部署到你的 Cloudflare Pages
-git clone https://github.com/your-name/cool-docs.git
-cd cool-docs
-# 享受极致的文档体验！</code></pre>
-                </div>
-            </div>
-        </section>
+        <!-- 编辑与预览容器 -->
+        <div class="flex-1 relative overflow-hidden flex flex-col">
+            <!-- 编辑框 -->
+            <textarea id="doc-content-input" oninput="autoSave()" placeholder="在这里开始输入内容... 支持 Markdown 语法（如 # 标题、* 列表、**加粗** 等）" class="flex-1 w-full p-8 bg-transparent text-slate-200 resize-none focus:outline-none font-mono text-sm leading-relaxed"></textarea>
+            
+            <!-- 预览框 -->
+            <div id="doc-preview" class="hidden flex-1 w-full p-8 overflow-y-auto prose prose-invert max-w-none text-slate-300"></div>
+        </div>
     </main>
 
-    <footer class="border-t border-slate-900 mt-20 py-8 text-center text-xs text-slate-600">
-        <p>© 2026 Doahang. All rights reserved. Hosted on Cloudflare Pages.</p>
-    </footer>
+    <!-- 逻辑脚本 -->
+    <script>
+        let docs = JSON.parse(localStorage.getItem('daohang_docs')) || [
+            { id: 1, title: '🚀 欢迎使用 Daohang 智能文档', content: '# 欢迎来到你的专属云端文档！\n\n这是一款专为年轻人打造的极简、炫酷、零服务器负担的**轻量化在线文档**。\n\n### 核心特性：\n- **自动保存**：你输入的所有内容都会实时保存在当前浏览器的本地缓存（LocalStorage）中，刷新不丢失。\n- **Markdown 支持**：支持各级标题、列表、引用、加粗等。\n- **极速访问**：依托你的专属域名 `daohang.kejiyun.top` 配合 Cloudflare 优选 IP 加速，全球秒开！\n\n快点击左上角的 **+** 按钮开始编写你自己的内容吧！' }
+        ];
+        let currentDocId = docs[0].id;
+        let currentMode = 'edit';
+
+        function renderList() {
+            const listEl = document.getElementById('doc-list');
+            listEl.innerHTML = '';
+            docs.forEach(doc => {
+                const item = document.createElement('div');
+                item.className = `group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition ${doc.id === currentDocId ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/20 font-medium' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`;
+                item.innerHTML = `
+                    <span class="truncate flex-1" onclick="selectDoc(${doc.id})">${doc.title || '无标题文档'}</span>
+                    ${docs.length > 1 ? `<button onclick="deleteDoc(event, ${doc.id})" class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 p-1 transition">×</button>` : ''}
+                `;
+                listEl.appendChild(item);
+            });
+            loadCurrentDoc();
+        }
+
+        function loadCurrentDoc() {
+            const doc = docs.find(d => d.id === currentDocId);
+            if (doc) {
+                document.getElementById('doc-title-input').value = doc.title;
+                document.getElementById('doc-content-input').value = doc.content;
+                document.getElementById('doc-preview').innerHTML = marked.parse(doc.content);
+            }
+        }
+
+        function selectDoc(id) {
+            currentDocId = id;
+            renderList();
+        }
+
+        function createNewDoc() {
+            const newDoc = { id: Date.now(), title: '新文档 - ' + new Date().toLocaleTimeString(), content: '# 新文档\n\n在此开始输入...' };
+            docs.unshift(newDoc);
+            currentDocId = newDoc.id;
+            renderList();
+        }
+
+        function deleteDoc(e, id) {
+            e.stopPropagation();
+            docs = docs.filter(d => d.id !== id);
+            if (currentDocId === id) {
+                currentDocId = docs[0].id;
+            }
+            renderList();
+            saveData();
+        }
+
+        function updateTitle() {
+            const doc = docs.find(d => d.id === currentDocId);
+            if (doc) {
+                doc.title = document.getElementById('doc-title-input').value;
+                renderList();
+                saveData();
+            }
+        }
+
+        function autoSave() {
+            const doc = docs.find(d => d.id === currentDocId);
+            if (doc) {
+                doc.content = document.getElementById('doc-content-input').value;
+                saveData();
+                
+                // 显示已保存状态动画
+                const status = document.getElementById('save-status');
+                status.innerText = '正在保存...';
+                setTimeout(() => { status.innerText = '已自动保存'; }, 400);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('daohang_docs', JSON.stringify(docs));
+        }
+
+        function switchTab(mode) {
+            currentMode = mode;
+            const editArea = document.getElementById('doc-content-input');
+            const previewArea = document.getElementById('doc-preview');
+            const btnEdit = document.getElementById('btn-edit');
+            const btnPreview = document.getElementById('btn-preview');
+
+            if (mode === 'edit') {
+                editArea.classList.remove('hidden');
+                previewArea.classList.add('hidden');
+                btnEdit.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition";
+                btnPreview.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white transition";
+            } else {
+                previewArea.innerHTML = marked.parse(editArea.value);
+                editArea.classList.add('hidden');
+                previewArea.classList.remove('hidden');
+                btnPreview.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition";
+                btnEdit.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white transition";
+            }
+        }
+
+        function exportDoc() {
+            const doc = docs.find(d => d.id === currentDocId);
+            const blob = new Blob([doc.content], { type: 'text/markdown;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${doc.title || 'document'}.md`;
+            a.click();
+        }
+
+        // 初始化渲染
+        renderList();
+    </script>
 </body>
 </html>
