@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daohang Media Studio - 图文视频演示文档</title>
-    <!-- Tailwind CSS -->
+    <title>Doahang Studio - 沉浸式图文视频演示大屏</title>
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,203 +12,85 @@
             theme: {
                 extend: {
                     colors: {
-                        darker: '#080c14',
-                        card: '#111827',
+                        darker: '#030712',
+                        card: '#0b0f19'
                     }
                 }
             }
         }
     </script>
-    <!-- Marked & DOMPurify 确保富文本安全渲染 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        .media-container iframe, .media-container video {
-            width: 100%;
-            height: 360px;
-            border-radius: 0.75rem;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
+        .animate-float { animation: float 5s ease-in-out infinite; }
+        .glass { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); }
     </style>
 </head>
-<body class="bg-[#080c14] text-slate-100 font-sans antialiased h-screen flex overflow-hidden">
+<body class="bg-[#030712] text-slate-100 font-sans antialiased min-h-screen selection:bg-cyan-500 selection:text-white overflow-x-hidden">
 
-    <!-- 左侧：多媒体演示大纲导航 -->
-    <aside class="w-80 bg-[#0d1322] border-r border-slate-800 flex flex-col z-10">
-        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+    <!-- 顶部导航栏 -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-sm shadow-lg shadow-cyan-500/20">M</div>
-                <div>
-                    <h1 class="font-bold text-sm tracking-wide text-white">Media Studio</h1>
-                    <p class="text-[10px] text-cyan-400">图文视频演示专用工作台</p>
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-lg shadow-lg shadow-cyan-500/30">D</div>
+                <span class="font-extrabold tracking-wider text-base bg-gradient-to-r from-white via-slate-200 to-cyan-400 bg-clip-text text-transparent">DOAHANG STUDIO</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-xs px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">⚡ 极速稳定运行中</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="max-w-6xl mx-auto px-6 pt-32 pb-20 space-y-16">
+        
+        <!-- 头部 Banner -->
+        <div class="text-center space-y-6 max-w-3xl mx-auto">
+            <span class="inline-block text-xs uppercase tracking-widest text-cyan-400 font-bold px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 animate-float">Next-Gen Media Showcase</span>
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+                为年轻一代打造的<br><span class="bg-gradient-to-r from-cyan-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">图文视频演示空间</span>
+            </h1>
+            <p class="text-slate-400 text-base sm:text-lg">融合极客暗黑美学与多媒体交互，完美呈现各类图文指南与视频演示内容。</p>
+        </div>
+
+        <!-- 演示卡片网格：图文与视频混排 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- 卡片一：图文展示 -->
+            <div class="rounded-2xl bg-[#0b0f19] border border-slate-800/80 overflow-hidden hover:border-cyan-500/50 transition group">
+                <div class="h-48 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="Demo">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent"></div>
+                </div>
+                <div class="p-6 space-y-4">
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400">图文教程</span>
+                    <h3 class="text-xl font-bold text-white">现代化前端交互与视觉设计指南</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">深入探讨如何利用纯前端与全球 CDN 节点构建媲美原生应用的网页体验，拒绝沉闷与冗余。</p>
                 </div>
             </div>
-            <button onclick="addNewPage()" class="p-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white transition shadow" title="新建演示页">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-            </button>
-        </div>
 
-        <!-- 演示页列表 -->
-        <div id="page-list" class="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
-            <!-- 动态生成 -->
-        </div>
-
-        <div class="p-4 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
-            <span>🌐 运行于 Cloudflare 节点</span>
-            <span class="text-cyan-400 font-mono">v2.5 Pro</span>
-        </div>
-    </aside>
-
-    <!-- 右侧：多媒体内容创作与演示大屏 -->
-    <main class="flex-1 flex flex-col bg-[#080c14] relative">
-        <!-- 顶部工具栏 -->
-        <header class="h-16 border-b border-slate-800 px-8 flex items-center justify-between bg-[#0d1322]/60 backdrop-blur-md">
-            <input type="text" id="page-title" oninput="updateTitle()" placeholder="输入演示文档标题..." class="bg-transparent font-bold text-xl text-white focus:outline-none w-1/2">
-            
-            <div class="flex items-center space-x-3">
-                <!-- 快捷媒体插入按钮 -->
-                <div class="hidden sm:flex items-center space-x-1 bg-slate-900 border border-slate-800 rounded-xl p-1">
-                    <button onclick="insertTag('image')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-1">
-                        <span>📷 插入图片</span>
-                    </button>
-                    <button onclick="insertTag('video')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-1">
-                        <span>🎬 嵌入视频</span>
-                    </button>
-                    <button onclick="insertTag('callout')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-1">
-                        <span>💡 提示块</span>
-                    </button>
+            <!-- 卡片二：视频嵌入展示 -->
+            <div class="rounded-2xl bg-[#0b0f19] border border-slate-800/80 overflow-hidden hover:border-indigo-500/50 transition group flex flex-col justify-between">
+                <div class="p-6 space-y-4">
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-cyan-500/10 text-cyan-400">视频演示</span>
+                    <h3 class="text-xl font-bold text-white">全流程多媒体视频在线演示</h3>
+                    <!-- 嵌入视频 -->
+                    <div class="rounded-xl overflow-hidden border border-slate-800 bg-black aspect-video">
+                        <video controls class="w-full h-full object-cover" src="https://www.w3schools.com/html/mov_bbb.mp4"></video>
+                    </div>
                 </div>
-
-                <button onclick="switchMode('edit')" id="btn-edit" class="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 text-white transition shadow-lg shadow-cyan-600/20">编辑排版</button>
-                <button onclick="switchMode('preview')" id="btn-preview" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition">演示大屏</button>
             </div>
-        </header>
 
-        <!-- 编辑 / 演示视窗 -->
-        <div class="flex-1 relative flex overflow-hidden">
-            <!-- 源码/Markdown 编辑区 -->
-            <textarea id="page-content" oninput="autoSave()" placeholder="在此输入图文与视频演示文案... 支持 Markdown 语法、HTML 标签及多媒体链接。" class="flex-1 w-full p-10 bg-transparent text-slate-200 resize-none focus:outline-none font-mono text-sm leading-relaxed"></textarea>
-            
-            <!-- 沉浸式图文视频演示大屏预览区 -->
-            <div id="page-preview" class="hidden flex-1 w-full p-10 overflow-y-auto prose prose-invert max-w-none text-slate-300 media-container"></div>
         </div>
+
     </main>
 
-    <!-- 交互逻辑 -->
-    <script>
-        let pages = JSON.parse(localStorage.getItem('daohang_media_docs')) || [
-            { 
-                id: 1, 
-                title: '🎬 产品功能演示与操作指南', 
-                content: '# 欢迎来到多媒体演示大屏\n\n本页面用于展示**图文混排**及**视频播放**操作演示。\n\n> 💡 **提示**：点击右上角的“演示大屏”按钮，即可获得无干扰的极客沉浸式演示效果！\n\n### 1. 图文混排示例\n下面是一张科技感演示配图：\n![演示图片](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop)\n\n### 2. 视频在线演示\n你可以直接在这里嵌入教学视频或演示链接：\n<video controls src="https://www.w3schools.com/html/mov_bbb.mp4"></video>\n\n### 3. 核心优势\n- 纯前端架构，无需任何服务器维护。\n- 依托 Cloudflare 极速全球分发。\n- 数据本地自动加密暂存，安全可靠。' 
-            }
-        ];
-        let currentPageId = pages[0].id;
+    <!-- 底部版权 -->
+    <footer class="border-t border-slate-900 py-8 text-center text-xs text-slate-600">
+        <p>© 2026 Doahang Studio. Powered by Cloudflare Pages & Optimized IP.</p>
+    </footer>
 
-        function renderList() {
-            const listEl = document.getElementById('page-list');
-            listEl.innerHTML = '';
-            pages.forEach(p => {
-                const item = document.createElement('div');
-                item.className = `group flex items-center justify-between px-3.5 py-3 rounded-xl cursor-pointer transition ${p.id === currentPageId ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-semibold' : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'}`;
-                item.innerHTML = `
-                    <div class="flex items-center space-x-2.5 truncate flex-1" onclick="selectPage(${p.id})">
-                        <span class="w-1.5 h-1.5 rounded-full ${p.id === currentPageId ? 'bg-cyan-400' : 'bg-slate-600'}"></span>
-                        <span class="truncate">${p.title || '无标题演示'}</span>
-                    </div>
-                    ${pages.length > 1 ? `<button onclick="deletePage(event, ${p.id})" class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 px-1.5 transition">×</button>` : ''}
-                `;
-                listEl.appendChild(item);
-            });
-            loadCurrentPage();
-        }
-
-        function loadCurrentPage() {
-            const p = pages.find(item => item.id === currentPageId);
-            if (p) {
-                document.getElementById('page-title').value = p.title;
-                document.getElementById('page-content').value = p.content;
-                document.getElementById('page-preview').innerHTML = marked.parse(p.content);
-            }
-        }
-
-        function selectPage(id) {
-            currentPageId = id;
-            renderList();
-        }
-
-        function addNewPage() {
-            const newP = { id: Date.now(), title: '新演示页 - ' + new Date().toLocaleTimeString(), content: '# 标题\n\n在此输入内容...' };
-            pages.unshift(newP);
-            currentPageId = newP.id;
-            renderList();
-        }
-
-        function deletePage(e, id) {
-            e.stopPropagation();
-            pages = pages.filter(item => item.id !== id);
-            if (currentPageId === id) currentPageId = pages[0].id;
-            renderList();
-            saveData();
-        }
-
-        function updateTitle() {
-            const p = pages.find(item => item.id === currentPageId);
-            if (p) {
-                p.title = document.getElementById('page-title').value;
-                renderList();
-                saveData();
-            }
-        }
-
-        function autoSave() {
-            const p = pages.find(item => item.id === currentPageId);
-            if (p) {
-                p.content = document.getElementById('page-content').value;
-                saveData();
-            }
-        }
-
-        function saveData() {
-            localStorage.setItem('daohang_media_docs', JSON.stringify(pages));
-        }
-
-        function insertTag(type) {
-            const textarea = document.getElementById('page-content');
-            let snippet = '';
-            if (type === 'image') {
-                snippet = '\n![图片描述](https://images.unsplash.com/photo-1...)\n';
-            } else if (type === 'video') {
-                snippet = '\n<video controls src="你的视频直链地址.mp4"></video>\n';
-            } else if (type === 'callout') {
-                snippet = '\n> 💡 **重要提示**：在这里输入需要强调的演示说明文字。\n';
-            }
-            const start = textarea.selectionStart;
-            textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(textarea.selectionEnd);
-            autoSave();
-        }
-
-        function switchMode(mode) {
-            const editArea = document.getElementById('page-content');
-            const previewArea = document.getElementById('page-preview');
-            const btnEdit = document.getElementById('btn-edit');
-            const btnPreview = document.getElementById('btn-preview');
-
-            if (mode === 'edit') {
-                editArea.classList.remove('hidden');
-                previewArea.classList.add('hidden');
-                btnEdit.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 text-white transition shadow-lg shadow-cyan-600/20";
-                btnPreview.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition";
-            } else {
-                previewArea.innerHTML = marked.parse(editArea.value);
-                editArea.classList.add('hidden');
-                previewArea.classList.remove('hidden');
-                btnPreview.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 text-white transition shadow-lg shadow-cyan-600/20";
-                btnEdit.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition";
-            }
-        }
-
-        renderList();
-    </script>
 </body>
 </html>
