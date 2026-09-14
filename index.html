@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doahang Docs - 炫酷文档演示</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#6366f1', 600: '#4f46e5' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        .animate-glow {
+            animation: glow 6s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen relative overflow-x-hidden">
+
+    <!-- 背景炫光动画 -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl pointer-events-none animate-glow"></div>
+    <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full blur-3xl pointer-events-none animate-glow" style="animation-delay: 3s;"></div>
+
+    <!-- 导航栏 -->
+    <header class="border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-50 bg-slate-950/60">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 font-black text-lg">D</div>
+                <span class="font-bold tracking-wider text-lg bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">DOAHANG DOCS</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-xs px-2.5 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">v1.0.0 Live</span>
+                <a href="https://github.com" target="_blank" class="text-sm font-medium text-slate-400 hover:text-white transition">GitHub</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主体内容区 -->
+    <main class="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+        <!-- 侧边栏导航 -->
+        <aside class="space-y-6 hidden md:block">
+            <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Getting Started</div>
+            <ul class="space-y-2 text-sm text-slate-400">
+                <li><a href="#intro" class="block px-3 py-2 rounded-lg bg-indigo-500/10 text-indigo-400 font-medium border border-indigo-500/20">🚀 快速导览</a></li>
+                <li><a href="#features" class="block px-3 py-2 rounded-lg hover:bg-slate-900 hover:text-slate-200 transition">✨ 核心特性</a></li>
+                <li><a href="#components" class="block px-3 py-2 rounded-lg hover:bg-slate-900 hover:text-slate-200 transition">📦 组件演示</a></li>
+            </ul>
+        </aside>
+
+        <!-- 文档正文 -->
+        <section class="md:col-span-3 space-y-10">
+            <!-- 头部 Banner -->
+            <div class="p-8 rounded-2xl bg-gradient-to-b from-slate-900/80 to-slate-900/20 border border-slate-800/80 relative overflow-hidden">
+                <div class="relative z-10 space-y-4">
+                    <span class="inline-block text-xs uppercase tracking-widest text-purple-400 font-bold px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20">Next-Gen UI</span>
+                    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white">为年轻一代打造的<br><span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">极速炫酷文档</span></h1>
+                    <p class="text-slate-400 max-w-2xl text-base">零服务器负担，依托 Cloudflare 全球节点。极致轻量、动画流畅、视觉拉满，专为 23 岁以下年轻开发者与先锋团队设计。</p>
+                </div>
+            </div>
+
+            <!-- 特性卡片 -->
+            <div id="features" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-indigo-500/50 transition group">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition">⚡️</div>
+                    <h3 class="text-lg font-bold text-white mb-2">极速响应</h3>
+                    <p class="text-sm text-slate-400">纯静态前端托管在 Cloudflare Pages，结合优选IP，全国各地毫秒级响应。</p>
+                </div>
+                <div class="p-6 rounded-2xl bg-slate-900/40 border border-slate-800/80 hover:border-purple-500/50 transition group">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-purple-400 mb-4 group-hover:scale-110 transition">💎</div>
+                    <h3 class="text-lg font-bold text-white mb-2">暗黑美学</h3>
+                    <p class="text-sm text-slate-400">自带流光溢彩的渐变背景与微组件，深夜阅读不刺眼，科技感直接拉满。</p>
+                </div>
+            </div>
+
+            <!-- 代码块演示 -->
+            <div id="components" class="space-y-4">
+                <h2 class="text-xl font-bold text-white">快速接入代码</h2>
+                <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden">
+                    <div class="bg-slate-950 px-4 py-2 border-b border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                        <span>terminal</span>
+                        <span>bash</span>
+                    </div>
+                    <pre class="p-4 text-sm text-indigo-300 overflow-x-auto font-mono"><code># 克隆并部署到你的 Cloudflare Pages
+git clone https://github.com/your-name/cool-docs.git
+cd cool-docs
+# 享受极致的文档体验！</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-900 mt-20 py-8 text-center text-xs text-slate-600">
+        <p>© 2026 Doahang. All rights reserved. Hosted on Cloudflare Pages.</p>
+    </footer>
+</body>
+</html>
