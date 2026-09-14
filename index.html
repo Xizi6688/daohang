@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daohang Docs - 极速云端文档</title>
-    <!-- 引入 Tailwind CSS -->
+    <title>Daohang Media Studio - 图文视频演示文档</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -12,185 +12,202 @@
             theme: {
                 extend: {
                     colors: {
-                        darker: '#090d16',
-                        panel: '#111827',
+                        darker: '#080c14',
+                        card: '#111827',
                     }
                 }
             }
         }
     </script>
-    <!-- 引入 Marked.js 用于渲染 Markdown -->
+    <!-- Marked & DOMPurify 确保富文本安全渲染 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+        .media-container iframe, .media-container video {
+            width: 100%;
+            height: 360px;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
     </style>
 </head>
-<body class="bg-[#0b0f19] text-slate-100 font-sans antialiased h-screen flex overflow-hidden selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#080c14] text-slate-100 font-sans antialiased h-screen flex overflow-hidden">
 
-    <!-- 左侧边栏：文档列表 -->
-    <aside class="w-72 bg-[#0e1322] border-r border-slate-800/80 flex flex-col z-10">
-        <!-- 顶部 Logo 与新建按钮 -->
-        <div class="p-4 border-b border-slate-800/80 flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center font-bold text-sm shadow-md shadow-indigo-500/20">D</div>
-                <span class="font-bold tracking-wide text-sm bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">Daohang Docs</span>
+    <!-- 左侧：多媒体演示大纲导航 -->
+    <aside class="w-80 bg-[#0d1322] border-r border-slate-800 flex flex-col z-10">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-sm shadow-lg shadow-cyan-500/20">M</div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-wide text-white">Media Studio</h1>
+                    <p class="text-[10px] text-cyan-400">图文视频演示专用工作台</p>
+                </div>
             </div>
-            <button onclick="createNewDoc()" class="p-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition shadow-sm" title="新建文档">
+            <button onclick="addNewPage()" class="p-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white transition shadow" title="新建演示页">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
             </button>
         </div>
 
-        <!-- 文档标题列表 -->
-        <div id="doc-list" class="flex-1 overflow-y-auto p-3 space-y-1.5 text-sm">
+        <!-- 演示页列表 -->
+        <div id="page-list" class="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
             <!-- 动态生成 -->
         </div>
 
-        <!-- 底部状态 -->
-        <div class="p-3 border-t border-slate-800/80 text-xs text-slate-500 flex items-center justify-between">
-            <span>✨ 零服务器纯端存储</span>
-            <span id="save-status" class="text-emerald-400">已自动保存</span>
+        <div class="p-4 border-t border-slate-800 text-xs text-slate-500 flex items-center justify-between">
+            <span>🌐 运行于 Cloudflare 节点</span>
+            <span class="text-cyan-400 font-mono">v2.5 Pro</span>
         </div>
     </aside>
 
-    <!-- 右侧主编辑区 -->
-    <main class="flex-1 flex flex-col bg-[#0b0f19] relative">
+    <!-- 右侧：多媒体内容创作与演示大屏 -->
+    <main class="flex-1 flex flex-col bg-[#080c14] relative">
         <!-- 顶部工具栏 -->
-        <header class="h-14 border-b border-slate-800/80 px-6 flex items-center justify-between bg-[#0e1322]/50 backdrop-blur-md">
-            <input type="text" id="doc-title-input" oninput="updateTitle()" placeholder="输入文档标题..." class="bg-transparent font-bold text-lg text-white focus:outline-none w-1/2">
+        <header class="h-16 border-b border-slate-800 px-8 flex items-center justify-between bg-[#0d1322]/60 backdrop-blur-md">
+            <input type="text" id="page-title" oninput="updateTitle()" placeholder="输入演示文档标题..." class="bg-transparent font-bold text-xl text-white focus:outline-none w-1/2">
             
             <div class="flex items-center space-x-3">
-                <button onclick="switchTab('edit')" id="btn-edit" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition">编辑模式</button>
-                <button onclick="switchTab('preview')" id="btn-preview" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white transition">预览排版</button>
-                <button onclick="exportDoc()" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition">导出 Markdown</button>
+                <!-- 快捷媒体插入按钮 -->
+                <div class="hidden sm:flex items-center space-x-1 bg-slate-900 border border-slate-800 rounded-xl p-1">
+                    <button onclick="insertTag('image')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-1">
+                        <span>📷 插入图片</span>
+                    </button>
+                    <button onclick="insertTag('video')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-1">
+                        <span>🎬 嵌入视频</span>
+                    </button>
+                    <button onclick="insertTag('callout')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800 hover:text-white transition flex items-center space-x-1">
+                        <span>💡 提示块</span>
+                    </button>
+                </div>
+
+                <button onclick="switchMode('edit')" id="btn-edit" class="px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 text-white transition shadow-lg shadow-cyan-600/20">编辑排版</button>
+                <button onclick="switchMode('preview')" id="btn-preview" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition">演示大屏</button>
             </div>
         </header>
 
-        <!-- 编辑与预览容器 -->
-        <div class="flex-1 relative overflow-hidden flex flex-col">
-            <!-- 编辑框 -->
-            <textarea id="doc-content-input" oninput="autoSave()" placeholder="在这里开始输入内容... 支持 Markdown 语法（如 # 标题、* 列表、**加粗** 等）" class="flex-1 w-full p-8 bg-transparent text-slate-200 resize-none focus:outline-none font-mono text-sm leading-relaxed"></textarea>
+        <!-- 编辑 / 演示视窗 -->
+        <div class="flex-1 relative flex overflow-hidden">
+            <!-- 源码/Markdown 编辑区 -->
+            <textarea id="page-content" oninput="autoSave()" placeholder="在此输入图文与视频演示文案... 支持 Markdown 语法、HTML 标签及多媒体链接。" class="flex-1 w-full p-10 bg-transparent text-slate-200 resize-none focus:outline-none font-mono text-sm leading-relaxed"></textarea>
             
-            <!-- 预览框 -->
-            <div id="doc-preview" class="hidden flex-1 w-full p-8 overflow-y-auto prose prose-invert max-w-none text-slate-300"></div>
+            <!-- 沉浸式图文视频演示大屏预览区 -->
+            <div id="page-preview" class="hidden flex-1 w-full p-10 overflow-y-auto prose prose-invert max-w-none text-slate-300 media-container"></div>
         </div>
     </main>
 
-    <!-- 逻辑脚本 -->
+    <!-- 交互逻辑 -->
     <script>
-        let docs = JSON.parse(localStorage.getItem('daohang_docs')) || [
-            { id: 1, title: '🚀 欢迎使用 Daohang 智能文档', content: '# 欢迎来到你的专属云端文档！\n\n这是一款专为年轻人打造的极简、炫酷、零服务器负担的**轻量化在线文档**。\n\n### 核心特性：\n- **自动保存**：你输入的所有内容都会实时保存在当前浏览器的本地缓存（LocalStorage）中，刷新不丢失。\n- **Markdown 支持**：支持各级标题、列表、引用、加粗等。\n- **极速访问**：依托你的专属域名 `daohang.kejiyun.top` 配合 Cloudflare 优选 IP 加速，全球秒开！\n\n快点击左上角的 **+** 按钮开始编写你自己的内容吧！' }
+        let pages = JSON.parse(localStorage.getItem('daohang_media_docs')) || [
+            { 
+                id: 1, 
+                title: '🎬 产品功能演示与操作指南', 
+                content: '# 欢迎来到多媒体演示大屏\n\n本页面用于展示**图文混排**及**视频播放**操作演示。\n\n> 💡 **提示**：点击右上角的“演示大屏”按钮，即可获得无干扰的极客沉浸式演示效果！\n\n### 1. 图文混排示例\n下面是一张科技感演示配图：\n![演示图片](https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop)\n\n### 2. 视频在线演示\n你可以直接在这里嵌入教学视频或演示链接：\n<video controls src="https://www.w3schools.com/html/mov_bbb.mp4"></video>\n\n### 3. 核心优势\n- 纯前端架构，无需任何服务器维护。\n- 依托 Cloudflare 极速全球分发。\n- 数据本地自动加密暂存，安全可靠。' 
+            }
         ];
-        let currentDocId = docs[0].id;
-        let currentMode = 'edit';
+        let currentPageId = pages[0].id;
 
         function renderList() {
-            const listEl = document.getElementById('doc-list');
+            const listEl = document.getElementById('page-list');
             listEl.innerHTML = '';
-            docs.forEach(doc => {
+            pages.forEach(p => {
                 const item = document.createElement('div');
-                item.className = `group flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer transition ${doc.id === currentDocId ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/20 font-medium' : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`;
+                item.className = `group flex items-center justify-between px-3.5 py-3 rounded-xl cursor-pointer transition ${p.id === currentPageId ? 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 font-semibold' : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'}`;
                 item.innerHTML = `
-                    <span class="truncate flex-1" onclick="selectDoc(${doc.id})">${doc.title || '无标题文档'}</span>
-                    ${docs.length > 1 ? `<button onclick="deleteDoc(event, ${doc.id})" class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 p-1 transition">×</button>` : ''}
+                    <div class="flex items-center space-x-2.5 truncate flex-1" onclick="selectPage(${p.id})">
+                        <span class="w-1.5 h-1.5 rounded-full ${p.id === currentPageId ? 'bg-cyan-400' : 'bg-slate-600'}"></span>
+                        <span class="truncate">${p.title || '无标题演示'}</span>
+                    </div>
+                    ${pages.length > 1 ? `<button onclick="deletePage(event, ${p.id})" class="opacity-0 group-hover:opacity-100 text-slate-500 hover:text-red-400 px-1.5 transition">×</button>` : ''}
                 `;
                 listEl.appendChild(item);
             });
-            loadCurrentDoc();
+            loadCurrentPage();
         }
 
-        function loadCurrentDoc() {
-            const doc = docs.find(d => d.id === currentDocId);
-            if (doc) {
-                document.getElementById('doc-title-input').value = doc.title;
-                document.getElementById('doc-content-input').value = doc.content;
-                document.getElementById('doc-preview').innerHTML = marked.parse(doc.content);
+        function loadCurrentPage() {
+            const p = pages.find(item => item.id === currentPageId);
+            if (p) {
+                document.getElementById('page-title').value = p.title;
+                document.getElementById('page-content').value = p.content;
+                document.getElementById('page-preview').innerHTML = marked.parse(p.content);
             }
         }
 
-        function selectDoc(id) {
-            currentDocId = id;
+        function selectPage(id) {
+            currentPageId = id;
             renderList();
         }
 
-        function createNewDoc() {
-            const newDoc = { id: Date.now(), title: '新文档 - ' + new Date().toLocaleTimeString(), content: '# 新文档\n\n在此开始输入...' };
-            docs.unshift(newDoc);
-            currentDocId = newDoc.id;
+        function addNewPage() {
+            const newP = { id: Date.now(), title: '新演示页 - ' + new Date().toLocaleTimeString(), content: '# 标题\n\n在此输入内容...' };
+            pages.unshift(newP);
+            currentPageId = newP.id;
             renderList();
         }
 
-        function deleteDoc(e, id) {
+        function deletePage(e, id) {
             e.stopPropagation();
-            docs = docs.filter(d => d.id !== id);
-            if (currentDocId === id) {
-                currentDocId = docs[0].id;
-            }
+            pages = pages.filter(item => item.id !== id);
+            if (currentPageId === id) currentPageId = pages[0].id;
             renderList();
             saveData();
         }
 
         function updateTitle() {
-            const doc = docs.find(d => d.id === currentDocId);
-            if (doc) {
-                doc.title = document.getElementById('doc-title-input').value;
+            const p = pages.find(item => item.id === currentPageId);
+            if (p) {
+                p.title = document.getElementById('page-title').value;
                 renderList();
                 saveData();
             }
         }
 
         function autoSave() {
-            const doc = docs.find(d => d.id === currentDocId);
-            if (doc) {
-                doc.content = document.getElementById('doc-content-input').value;
+            const p = pages.find(item => item.id === currentPageId);
+            if (p) {
+                p.content = document.getElementById('page-content').value;
                 saveData();
-                
-                // 显示已保存状态动画
-                const status = document.getElementById('save-status');
-                status.innerText = '正在保存...';
-                setTimeout(() => { status.innerText = '已自动保存'; }, 400);
             }
         }
 
         function saveData() {
-            localStorage.setItem('daohang_docs', JSON.stringify(docs));
+            localStorage.setItem('daohang_media_docs', JSON.stringify(pages));
         }
 
-        function switchTab(mode) {
-            currentMode = mode;
-            const editArea = document.getElementById('doc-content-input');
-            const previewArea = document.getElementById('doc-preview');
+        function insertTag(type) {
+            const textarea = document.getElementById('page-content');
+            let snippet = '';
+            if (type === 'image') {
+                snippet = '\n![图片描述](https://images.unsplash.com/photo-1...)\n';
+            } else if (type === 'video') {
+                snippet = '\n<video controls src="你的视频直链地址.mp4"></video>\n';
+            } else if (type === 'callout') {
+                snippet = '\n> 💡 **重要提示**：在这里输入需要强调的演示说明文字。\n';
+            }
+            const start = textarea.selectionStart;
+            textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(textarea.selectionEnd);
+            autoSave();
+        }
+
+        function switchMode(mode) {
+            const editArea = document.getElementById('page-content');
+            const previewArea = document.getElementById('page-preview');
             const btnEdit = document.getElementById('btn-edit');
             const btnPreview = document.getElementById('btn-preview');
 
             if (mode === 'edit') {
                 editArea.classList.remove('hidden');
                 previewArea.classList.add('hidden');
-                btnEdit.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition";
-                btnPreview.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white transition";
+                btnEdit.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 text-white transition shadow-lg shadow-cyan-600/20";
+                btnPreview.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition";
             } else {
                 previewArea.innerHTML = marked.parse(editArea.value);
                 editArea.classList.add('hidden');
                 previewArea.classList.remove('hidden');
-                btnPreview.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-indigo-600 text-white transition";
-                btnEdit.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white transition";
+                btnPreview.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-cyan-600 text-white transition shadow-lg shadow-cyan-600/20";
+                btnEdit.className = "px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition";
             }
         }
 
-        function exportDoc() {
-            const doc = docs.find(d => d.id === currentDocId);
-            const blob = new Blob([doc.content], { type: 'text/markdown;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${doc.title || 'document'}.md`;
-            a.click();
-        }
-
-        // 初始化渲染
         renderList();
     </script>
 </body>
